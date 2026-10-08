@@ -1,164 +1,62 @@
-# NEES Python SDK — Developer Preview
+# NEES Governance Platform — Developer Preview & Integration Guide
 
-A developer-facing guide for using the official NEES Python SDK.
+Official public-facing integration documentation from **Nainacore Emotional Tech**.
 
-NEES provides runtime governance services for AI applications. The Python SDK gives developers a simple client interface for connecting Python applications to supported NEES API capabilities.
+NEES provides an independent governance boundary for supported AI agents, automation systems and application actions. Your application owns the action and verifies the outcome; NEES governs the supported operation through its published contracts.
 
-> This repository contains documentation and safe usage examples only.
-> It does not contain the NEES Core Engine source code or the proprietary SDK implementation.
-
----
-
-## Current SDK
-
-Current developer preview:
-
-- Package: `nees-core-sdk`
-- Python import: `nees`
-- Python: 3.9+
-- Current SDK version: `0.1.x`
-- Current supported SDK capability: authenticated chat invocation
-
-Install:
-
-```bash
-pip install nees-core-sdk
-```
-
-## Get API Access
-
-The SDK requires a NEES API key.
-
-Developer and evaluation access is currently provided by Nainacore Emotional Tech.
-
-See [API_ACCESS.md](API_ACCESS.md) for access and credential setup.
-
-
-Basic usage:
-
-```python
-from nees import NEESClient
-
-client = NEESClient()
-
-result = client.chat("Reply with exactly: NEES SDK connected")
-
-print(result.reply)
-```
-
-The SDK reads `NEES_API_KEY` from the environment when an API key is not supplied directly.
-
----
-
-## What NEES is for
-
-NEES is designed for applications that need a governed runtime boundary around AI behavior and, as supported capabilities evolve, action-capable AI workflows.
-
-The current Python SDK provides a deliberately small public interface.
-
-Developers interact with documented public contracts without needing access to NEES Core internals.
-
----
-
-## Public governance result
-
-A chat response can expose selected public governance information:
-
-```python
-result.governance.decision
-result.governance.status
-result.governance.reason
-```
-
-These fields are intentionally limited public projections.
-
-They should not be interpreted as exposing NEES internal policy evaluation, decision mechanics, or implementation details.
-
----
+> **Public documentation only.** This repository contains no NEES Core source, private governance policies, private SDK implementation, credentials, customer data or production assessment bindings.
 
 ## Start here
 
-- [Quickstart](QUICKSTART.md)
-- [Installation](INSTALLATION.md)
-- [Authentication](AUTHENTICATION.md)
-- [SDK Usage](SDK_USAGE.md)
-- [Error Handling](ERROR_HANDLING.md)
-- [Security & Scope](SECURITY_AND_SCOPE.md)
-- [Current Limitations](CURRENT_LIMITATIONS.md)
+1. [Access and onboarding](API_ACCESS.md)
+2. [Governance Platform quickstart](QUICKSTART.md)
+3. [Complete integration guide](docs/NEES-INTEGRATION-GUIDE.md)
+4. [Integration patterns](docs/integration-patterns.md)
+5. [Python SDK usage and migration](SDK_USAGE.md)
+6. [Production readiness](docs/PRODUCTION-CHECKLIST.md)
+7. [Troubleshooting](docs/TROUBLESHOOTING.md)
+8. [Security and scope](SECURITY_AND_SCOPE.md)
 
-Examples are available in [`examples/`](examples/).
+## Current platform
 
----
+| Surface | Public URL | Role |
+| --- | --- | --- |
+| Website | https://nees.cloud | Product overview |
+| Dashboard | https://app.nees.cloud | Organization, project, runtime and credential onboarding |
+| Runtime | https://api.nees.cloud | Hosted governed-operation lifecycle |
+| Control Plane | https://control-api.nees.cloud | Management API; authenticated/authorized |
+| Gateway | https://nees-gateway.onrender.com | HTTP governance boundary |
 
-## Design principle
+These are public *service addresses*, not authorization to access another organization's resources.
 
-The developer interface is intentionally different from the implementation of NEES Core.
+## SDK generations — read before installing
 
-Applications should depend on stable public SDK contracts rather than internal governance implementation details.
+**Governance Platform / Core V3:** The Python distribution is `nees-sdk` (3.0.0 release-candidate series); the CLI is `nees`. See [SDK_USAGE.md](SDK_USAGE.md). Check the latest published PyPI release before pinning.
 
----
+**Historical chat-only developer preview:** The older `nees-core-sdk` (0.1.x) with `from nees import NEESClient` and `client.chat(...)` is a *different, legacy interface*. It is not the documented V3 governance-operation client. The former examples in `examples/` remain as **legacy reference only**, not recommended Governance Platform examples. Do not mix the packages or assume API compatibility.
 
-## Current scope
+## Execution boundary
 
-The current SDK exposes authenticated chat invocation.
+```text
+Application / Agent (owns intent, observations and effects)
+    -> supported SDK / REST connector / Gateway / MCP adapter
+    -> NEES hosted Runtime (qualify / govern)
+    -> application enforces authorized result, executes and verifies
+    -> report actual outcome; inspect operation / evidence / receipt
+```
 
-Additional NEES capabilities may become available through future documented SDK releases.
+Authorization is not proof that an external action occurred. A transport error is not permission to bypass governance.
 
-Do not assume that an API or capability exists unless it is explicitly documented in the current SDK.
+## Examples and case studies
 
----
+- [NainaSOS desktop agent](docs/CASE-STUDIES.md#nainasos-desktop-agent): authorization, foreground-target verification, outcome reporting.
+- [Governance Lab](docs/CASE-STUDIES.md#governance-lab-web-application): strict scenario normalization, synthetic actions, evidence.
+- [Legacy chat examples](examples/): archival v0.1 chat interface only; **not** V3 governance examples.
 
-## Links
+## Publication and security
 
-Website:
+All example values are intentionally placeholders. Do not add real keys, organization IDs, production assessment JSON, tokens, internal policy documents, customer traces, or copied private repository source. See [SECURITY_AND_SCOPE.md](SECURITY_AND_SCOPE.md).
 
-https://nees.cloud
+Documentation edition: **Governance Platform integration v1 draft (2026-10-08)**. Actual request/response shapes must be validated against the version of the live API/SDK being used. No capability is guaranteed just by appearing in this overview.
 
-PyPI package:
-
-`nees-core-sdk`
-
----
-
-## Security
-
-Never commit:
-
-- NEES API keys
-- access credentials
-- `.env` files
-- production secrets
-- customer data
-
-Use environment variables or your application's secret-management system.
-
-See [SECURITY_AND_SCOPE.md](SECURITY_AND_SCOPE.md).
-
----
-
-## Try NEES
-
-Before integrating the Python SDK, developers can explore public NEES-powered experiences:
-
-### Governance Lab
-
-The Governance Lab provides a public demonstration of selected NEES governance behavior and normalized evidence.
-
-Visit:
-
-https://nees.cloud
-
-### Naina Persona
-
-Naina Persona is a public AI application that uses NEES as part of its runtime integration.
-
-It is provided as an application-level example rather than as SDK documentation.
-
-> These demonstrations expose selected public behavior only. They do not expose NEES Core implementation details or represent the complete NEES Core capability surface.
-
----
-## About Nainacore
-
-NEES is developed by **Nainacore Emotional Tech**.
-
-© 2026 Nainacore Emotional Tech. All rights reserved.
+© 2026 Nainacore Emotional Tech. Nainacore™.

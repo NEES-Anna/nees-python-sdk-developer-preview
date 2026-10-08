@@ -1,115 +1,34 @@
-# SDK Usage
+# Python SDK — Core V3 and Legacy Compatibility
 
-## Import
+## Current governance SDK generation
 
-```python
-from nees import NEESClient
+The Governance Platform Python distribution is **`nees-sdk`**, from the 3.0.0 release-candidate series (3.0.0rc2 was published and validated during integration development). The command-line entry point is **`nees`**.
+
+```bash
+python -m pip install "nees-sdk==3.0.0rc2"
+nees --help
 ```
 
----
+Verify current PyPI availability, supported Python versions and deployed API compatibility before using this exact pin in production.
 
-## Default client
-
-```python
-client = NEESClient()
-```
-
-The client can use the `NEES_API_KEY` environment variable.
-
----
-
-## Custom configuration
-
-```python
-from nees import NEESClient
-
-client = NEESClient(
-    api_key="your-api-key",
-    base_url="https://api.nees.cloud",
-    timeout=30,
-)
-```
-
-For production deployments, prefer secret-management or environment-based credential injection rather than hard-coded API keys.
-
----
-
-## Chat
-
-Current SDK v0.1 exposes authenticated chat invocation.
-
-```python
-result = client.chat(
-    "Explain runtime governance in simple terms."
-)
-```
-
-Read the generated reply:
-
-```python
-print(result.reply)
-```
-
----
-
-## Response identifiers
-
-The public response model includes identifiers that can help applications correlate requests.
-
-```python
-print(result.session_id)
-print(result.request_id)
-print(result.trace_id)
-```
-
-A trace identifier may not always be present.
-
-Applications should therefore handle it as optional.
-
----
-
-## Governance result
-
-Selected governance information is exposed through:
-
-```python
-result.governance
-```
-
-Available public fields:
-
-```python
-result.governance.decision
-result.governance.status
-result.governance.reason
-```
-
-Example:
-
-```python
-result = client.chat("Explain this request.")
-
-governance = result.governance
-
-print("Decision:", governance.decision)
-print("Status:", governance.status)
-print("Reason:", governance.reason)
-```
-
-These fields represent the supported public SDK contract.
-
-They do not expose the internal governance implementation.
-
----
-
-## Current capability boundary
-
-Current SDK v0.1 supports:
+Documented CLI command families in the V3 SDK include:
 
 ```text
-chat:invoke
+nees health
+nees actions
+nees operation
+nees evidence
+nees receipt
 ```
 
-Do not assume that other NEES API capabilities are available through the Python SDK unless they appear in current official SDK documentation.
+Run `nees <command> --help` to inspect the installed version's argument syntax. This repository intentionally does not invent argument flags, request bodies or `NEESHTTPClient` constructor signatures that have not been verified against the published release.
 
-Future versions may expand this interface.
+The hosted operation lifecycle is **submit → qualify → start → report**; operation/evidence/receipt retrieval supports inspection of resulting records. Consult [Integration Guide](docs/NEES-INTEGRATION-GUIDE.md).
+
+## Legacy, not V3
+
+The older **`nees-core-sdk` 0.1.x** distribution used `from nees import NEESClient`, `client.chat(...)` and `NEES_API_KEY`. Its examples in [examples/](examples/) are retained for historical reference. They do **not** prove or demonstrate Core V3 operation governance. Migration requires checking imports, endpoints, auth configuration and response contracts; do not assume drop-in compatibility.
+
+## Safe operational principle
+
+The caller retains responsibility for actual external execution, verification and outcome reporting. A governance ALLOW does not itself prove an action executed. A timeout does not establish authorization, denial or execution success.

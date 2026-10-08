@@ -1,90 +1,58 @@
-# NEES Python SDK Quickstart
+# Governance Platform Quickstart (Core V3)
 
-This guide shows the smallest supported integration with the NEES Python SDK.
+This replaces the **recommended** v0.1 chat-only walkthrough. Old chat examples remain under `examples/` as historical material.
 
-## 1. Install
+## 1. Onboard
 
-```bash
-pip install nees-core-sdk
+Visit https://app.nees.cloud and authenticate. In the dashboard, create/select your **organization**, **project**, **runtime**, and **environment**. Issue a runtime credential using the authorized dashboard workflow. Store it in your secret manager; it may not be displayed again.
+
+## 2. Register and govern an action
+
+In the authorized platform workflow, register the application's external action with a stable action reference, resource, operation, capability, and side-effect semantics. Publish the required authority and policy configuration before submitting an operation.
+
+Example **illustrative identifiers, not provisioning commands**:
+
+```text
+organization: example-org
+project: sample-agent
+runtime: sample-runtime
+environment: development
+action ref: example.agent.send_message.v1
+resource: messaging.outbox
+operation: send_message
+capability: send_message
+side_effect: true
 ```
 
-Python 3.9 or newer is required.
+The action must actually exist in your own runtime; copying these strings does **not** register it.
 
----
+## 3. Choose a connector
 
-## 2. Configure your API key
+- **Python:** `python -m pip install "nees-sdk==3.0.0rc2"` (known historical release candidate; confirm currently published compatible version and Python requirements before use).
+- **REST:** Use an approved backend connection to the Runtime API.
+- **Gateway / MCP / framework connector:** Follow the corresponding supported deployment and connector docs.
 
-### Windows PowerShell
+For the Python package, inspect the installed CLI with `nees --help` and see [SDK_USAGE.md](SDK_USAGE.md). Do **not** use the v0.1 `NEESClient.chat` quickstart as a V3 example.
 
-```powershell
-$env:NEES_API_KEY="your-api-key"
+## 4. Configure credentials safely
+
+The following names illustrate the application-side integration pattern previously used in NainaSOS; consult your selected connector's current config contract:
+
+```text
+NEES_RUNTIME_URL=https://api.nees.cloud
+NEES_RUNTIME_API_KEY=<obtain-from-your-own-runtime>
 ```
 
-### Linux / macOS
+Set the API key in your trusted backend runtime or a secret manager. Never commit literal key values, use a browser bundle, or paste them into support tickets.
 
-```bash
-export NEES_API_KEY="your-api-key"
-```
+## 5. Govern and verify
 
-Do not place real API keys directly in source files that will be committed.
+Use the supported submit → qualify → start → report workflow. Inspect the operation, evidence, and receipt using your version's documented commands/routes.
 
----
+**Do not execute a side effect unless the governing result and the local target/context checks allow it.** Treat reject, missing authority, ambiguous response and unavailable service as fail-closed. Record the *actual* result, not merely a planned or authorized result.
 
-## 3. Create a client
+## 6. Acceptance tests
 
-```python
-from nees import NEESClient
+Verify one allowed operation, one blocked operation, one stale/invalid configuration, one transport failure, and one external execution failure. Check that evidence/receipt and reported execution state agree.
 
-client = NEESClient()
-```
-
-When no API key is passed directly, the SDK reads `NEES_API_KEY` from the environment.
-
----
-
-## 4. Send a chat request
-
-```python
-result = client.chat("Reply with exactly: NEES SDK connected")
-
-print(result.reply)
-```
-
-A minimal complete example:
-
-```python
-from nees import NEESClient
-
-client = NEESClient()
-
-result = client.chat(
-    "Reply with exactly: NEES SDK connected"
-)
-
-print(result.reply)
-```
-
----
-
-## 5. Inspect public governance information
-
-```python
-print(result.governance.decision)
-print(result.governance.status)
-print(result.governance.reason)
-```
-
-These values are public SDK fields.
-
-They are intentionally limited and do not expose NEES Core internal governance mechanics.
-
----
-
-## Next
-
-Read:
-
-- [SDK Usage](SDK_USAGE.md)
-- [Response Model](docs/response-model.md)
-- [Error Handling](ERROR_HANDLING.md)
-- [Security & Scope](SECURITY_AND_SCOPE.md)
+Next: [Complete integration guide](docs/NEES-INTEGRATION-GUIDE.md).

@@ -1,27 +1,13 @@
-# API Access
+# Governance Platform Access
 
-The NEES Python SDK requires a valid NEES API key.
+Open https://app.nees.cloud to sign in and use the available organization, project, runtime and environment onboarding screens. Provision a runtime key only for resources your account is authorized to manage.
 
-Developer and evaluation access is currently provided by Nainacore Emotional Tech.
+Hosted Runtime: https://api.nees.cloud
 
-To request access, visit:
+Hosted Control Plane: https://control-api.nees.cloud
 
-https://nees.cloud
+Do not use a public client application to carry a secret runtime key. Store it in a trusted backend, environment secret or secrets manager. Never publish a key, a real organization credential, privileged policy binding or sensitive governance record.
 
-Do not purchase, share, publish, or request API credentials through unofficial third parties.
+Historical `nees-core-sdk` v0.1 used `NEES_API_KEY`; Core V3 integrations may use connector-specific configuration such as `NEES_RUNTIME_API_KEY`. The two should **not** be assumed interchangeable.
 
-Once you receive a key, configure it as:
-
-## Windows PowerShell
-
-```powershell
-$env:NEES_API_KEY="your-api-key"
-```
-
-## Linux / macOS
-
-```bash
-export NEES_API_KEY="your-api-key"
-```
-
-Never commit your API key to source control.
+See [Quickstart](QUICKSTART.md), [SDK usage](SDK_USAGE.md) and [Security](SECURITY_AND_SCOPE.md).
