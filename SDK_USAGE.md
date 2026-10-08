@@ -1,115 +1,93 @@
-# SDK Usage
+# Python SDK — Core V3 and Legacy Compatibility
 
-## Import
+## Current governance SDK generation
 
-```python
-from nees import NEESClient
+The Governance Platform Python distribution is **`nees-sdk`**, from the 3.0.0 release-candidate series (3.0.0rc2 was published and validated during integration development). The command-line entry point is **`nees`**.
+
+```bash
+python -m pip install "nees-sdk==3.0.0rc2"
+nees --help
 ```
 
----
+Verify current PyPI availability, supported Python versions and deployed API compatibility before using this exact pin in production.
 
-## Default client
-
-```python
-client = NEESClient()
-```
-
-The client can use the `NEES_API_KEY` environment variable.
-
----
-
-## Custom configuration
-
-```python
-from nees import NEESClient
-
-client = NEESClient(
-    api_key="your-api-key",
-    base_url="https://api.nees.cloud",
-    timeout=30,
-)
-```
-
-For production deployments, prefer secret-management or environment-based credential injection rather than hard-coded API keys.
-
----
-
-## Chat
-
-Current SDK v0.1 exposes authenticated chat invocation.
-
-```python
-result = client.chat(
-    "Explain runtime governance in simple terms."
-)
-```
-
-Read the generated reply:
-
-```python
-print(result.reply)
-```
-
----
-
-## Response identifiers
-
-The public response model includes identifiers that can help applications correlate requests.
-
-```python
-print(result.session_id)
-print(result.request_id)
-print(result.trace_id)
-```
-
-A trace identifier may not always be present.
-
-Applications should therefore handle it as optional.
-
----
-
-## Governance result
-
-Selected governance information is exposed through:
-
-```python
-result.governance
-```
-
-Available public fields:
-
-```python
-result.governance.decision
-result.governance.status
-result.governance.reason
-```
-
-Example:
-
-```python
-result = client.chat("Explain this request.")
-
-governance = result.governance
-
-print("Decision:", governance.decision)
-print("Status:", governance.status)
-print("Reason:", governance.reason)
-```
-
-These fields represent the supported public SDK contract.
-
-They do not expose the internal governance implementation.
-
----
-
-## Current capability boundary
-
-Current SDK v0.1 supports:
+Documented CLI command families in the V3 SDK include:
 
 ```text
-chat:invoke
+nees health
+nees actions
+nees operation
+nees evidence
+nees receipt
 ```
 
-Do not assume that other NEES API capabilities are available through the Python SDK unless they appear in current official SDK documentation.
+Run `nees <command> --help` to inspect the installed version's argument syntax. The verified client constructors and CLI flags are recorded below. Complete HTTP request/response bodies and runtime behavior still require version-matched validation.
 
-Future versions may expand this interface.
+The hosted operation lifecycle is **submit → qualify → start → report**; operation/evidence/receipt retrieval supports inspection of resulting records. Consult [Integration Guide](docs/NEES-INTEGRATION-GUIDE.md).
+
+## Legacy, not V3
+
+The older **`nees-core-sdk` 0.1.x** distribution used `from nees import NEESClient`, `client.chat(...)` and `NEES_API_KEY`. Its examples in [examples/](examples/) are retained for historical reference. They do **not** prove or demonstrate Core V3 operation governance. Migration requires checking imports, endpoints, auth configuration and response contracts; do not assume drop-in compatibility.
+
+## Safe operational principle
+
+The caller retains responsibility for actual external execution, verification and outcome reporting. A governance ALLOW does not itself prove an action executed. A timeout does not establish authorization, denial or execution success.
+
+
+## Verified Python interface — `nees-sdk==3.0.0rc2`
+
+The following signatures were observed using Python `inspect.signature` on a clean installation of the published wheel on 2026-10-08. **This is interface inspection, not a live authenticated API test.**
+
+```python
+import os
+from nees import NEESHTTPClient, NEESHTTPConfig, ActionRequest
+
+config = NEESHTTPConfig(
+    base_url="https://api.nees.cloud",
+    api_key=os.environ["NEES_RUNTIME_API_KEY"],
+    timeout_seconds=10.0,
+)
+client = NEESHTTPClient(config)
+
+request = ActionRequest(
+    action_ref="example.action.v1",
+    operation_key="example-operation-001",
+    input={"message": "example"},
+)
+```
+
+This constructs SDK models/client only; the example action is NOT a registered action and is not submitted.
+
+| Method | Inspected signature |
+| --- | --- |
+| `health` | `health(self) -> dict[str, Any]` |
+| `list_actions` | `list_actions(self) -> list[ActionDefinition]` |
+| `register_action` | `register_action(self, definition: ActionDefinition) -> ActionDefinition` |
+| `submit` | `submit(self, request: ActionRequest, assessment: GovernanceAssessment) -> DecisionResult` |
+| `qualify` | `qualify(self, operation_id: str) -> QualificationResult` |
+| `start` | `start(self, qualification: QualificationResult) -> OperationResult` |
+| `report` | `report(self, operation_id: str, qualification_id: str, status: str, result: dict[str, Any]) -> OperationResult` |
+| `operation` | `operation(self, operation_id: str) -> OperationResult` |
+| `evidence` | `evidence(self, operation_id: str) -> list[EvidenceEvent]` |
+| `receipt` | `receipt(self, operation_id: str) -> ReceiptResult | None` |
+| `reconcile` | `reconcile(self, operation_id: str, result: dict[str, Any]) -> OperationResult` |
+| `answer_clarification` | `answer_clarification(self, request_id: str, response: dict[str, Any]) -> dict[str, Any]` |
+| `cancel_governance_request` | `cancel_governance_request(self, request_id: str, reason: str) -> dict[str, Any]` |
+| `decide_approval` | `decide_approval(self, request_id: str, *, approved: bool, approver_ref: str, expires_at: float) -> dict[str, Any]` |
+| `resume` | `resume(self, request_id: str) -> dict[str, Any]` |
+
+Inspected constructors: `NEESHTTPConfig(base_url, api_key, timeout_seconds=10.0)`, `NEESHTTPClient(config)`, `ActionRequest(action_ref, operation_key, input={})`.
+
+**Do not publish or invent assessment bindings, privileged configuration, production digests or real keys to make these examples appear runnable.** The correct `GovernanceAssessment` values come from an authorized, configured application/runtime. The actual deployed request/response contract, policy decisions and state transitions remain to be confirmed using safely provisioned test resources.
+
+## Verified CLI argument structure
+
+```text
+nees [--base-url BASE_URL] [--api-key API_KEY] [--timeout TIMEOUT] health
+nees [--base-url BASE_URL] [--api-key API_KEY] [--timeout TIMEOUT] actions
+nees [--base-url BASE_URL] [--api-key API_KEY] [--timeout TIMEOUT] operation OPERATION_ID
+nees [--base-url BASE_URL] [--api-key API_KEY] [--timeout TIMEOUT] evidence OPERATION_ID
+nees [--base-url BASE_URL] [--api-key API_KEY] [--timeout TIMEOUT] receipt OPERATION_ID
+```
+
+Use secure environment configuration instead of command-line key literals, which may leak through shell history/process listings.

@@ -1,105 +1,17 @@
-# Frequently Asked Questions
+# NEES Governance Platform — Frequently Asked Questions
 
-## What is the NEES Python SDK?
+**Which Python package should I use?** For Core V3 hosted governance integrations, use the compatible `nees-sdk` 3.x release-candidate generation. `nees-core-sdk` 0.1.x documented an older chat-only client.
 
-The NEES Python SDK is the official Python client for supported NEES runtime services.
+**Where do I create an API key?** Use your authorized runtime onboarding workflow in https://app.nees.cloud.
 
-It allows Python applications to interact with NEES through a deliberately limited public interface.
+**Can a browser store the runtime key?** No. Keep it in a trusted backend environment.
 
----
+**Does governance ALLOW mean the action happened?** No. The application must perform, verify and accurately report actual execution.
 
-## Does this repository contain NEES Core?
+**Can I govern non-Python applications?** The architecture supports connector-based approaches including REST, Gateway, MCP and framework adapters, subject to actual deployment, contract and availability.
 
-No.
+**Does the public SDK expose Core internals?** No. Integrate with documented public contracts.
 
-This repository contains documentation and developer examples only.
+**Can I copy Governance Lab decisions as production policy?** No. Its synthetic scenarios demonstrate behavior and are not a substitute for your organization's published policy or an actual execution proof.
 
-NEES Core implementation is not included.
-
----
-
-## Is the SDK itself the NEES Core Engine?
-
-No.
-
-The SDK is a client interface.
-
-NEES Core operates behind the supported NEES service boundary.
-
----
-
-## What does SDK v0.1 support?
-
-The current SDK supports authenticated chat invocation.
-
----
-
-## How do I install it?
-
-```bash
-pip install nees-core-sdk
-```
-
----
-
-## What do I import?
-
-```python
-from nees import NEESClient
-```
-
----
-
-## Where should I store my API key?
-
-Prefer an environment variable or trusted secret-management system.
-
-Example:
-
-```text
-NEES_API_KEY
-```
-
-Do not commit credentials to Git.
-
----
-
-## Can I use the SDK from frontend JavaScript?
-
-The Python SDK is intended for Python environments.
-
-More importantly, private NEES API credentials should normally remain on trusted backend infrastructure rather than being exposed to browsers.
-
----
-
-## Does the SDK expose how NEES makes governance decisions?
-
-No.
-
-The SDK exposes supported public results, not the proprietary governance implementation.
-
----
-
-## Can I rely on undocumented response fields?
-
-No.
-
-Applications should depend only on documented SDK properties.
-
----
-
-## Is NEES only for chatbots?
-
-NEES as a platform is broader than simple chat use cases.
-
-However, the current Python SDK v0.1 exposes only the documented chat capability.
-
-Future SDK releases may expose additional supported capabilities.
-
----
-
-## Where can I learn more?
-
-Visit:
-
-https://nees.cloud
+**Where should I begin?** [Quickstart](QUICKSTART.md), [Integration Guide](docs/NEES-INTEGRATION-GUIDE.md), and [Production Checklist](docs/PRODUCTION-CHECKLIST.md).

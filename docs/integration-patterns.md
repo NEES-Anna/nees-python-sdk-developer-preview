@@ -1,82 +1,25 @@
-# Integration Patterns
+# NEES Governance Platform Integration Patterns
 
-The NEES Python SDK is designed to be used from trusted Python application environments.
+| Pattern | Integration boundary | Supported responsibility |
+| --- | --- | --- |
+| Python SDK | Trusted Python service / agent | Client transport for hosted governed-operation lifecycle |
+| REST API | Trusted backend of any compatible language | Explicit authenticated operation and evidence calls |
+| Gateway / Proxy | Routed backend calls | Enforce governance on supported mediated paths |
+| MCP | MCP-compatible host and tools | Govern actions exposed through supported connector |
+| Framework adapter | Compatible agent framework | Preserve governance boundary and evidence |
 
-## Backend application
-
-Typical pattern:
-
-```text
-User Interface
-      |
-      v
-Application Backend
-      |
-      v
-NEES Python SDK
-      |
-      v
-NEES API
-```
-
-The application backend retains the NEES API credential.
-
----
-
-## Existing AI application
-
-The SDK can be added to an existing Python service without requiring the application's user interface to communicate directly with NEES.
+These are **integration patterns**, not a guarantee that each feature is publicly enabled for every account or framework. Verify deployment availability and version-specific configuration before use.
 
 ```text
-Application
-    |
-    +---- existing application logic
-    |
-    +---- NEES Python SDK
+User / UI
+   -> trusted application backend / agent
+   -> selected supported NEES boundary
+   -> hosted governance assessment
+   -> application enforces decision
+   -> executes only safe/authorized action
+   -> reports actual effect and checks evidence
 ```
 
-Keep NEES credentials in the trusted application environment.
+**Do not embed NEES runtime credentials in browser JavaScript.** Do not replace an approved target or capability after qualification, infer authority from a prompt, or assume an ALLOW is proof of execution.
 
----
-
-## Web API backend
-
-A Python web application may use `NEESClient` inside its backend service.
-
-Conceptually:
-
-```python
-from nees import NEESClient
-
-nees = NEESClient()
-
-def handle_request(message: str):
-    result = nees.chat(message)
-    return result.reply
-```
-
-Production applications should add their normal authentication, validation, logging, timeout, and error-handling requirements around this integration.
-
----
-
-## Framework independence
-
-The SDK is a Python client rather than an agent framework.
-
-Applications remain free to choose their own:
-
-- web framework
-- AI framework
-- model provider
-- application architecture
-- user interface
-
-Do not couple an integration to undocumented NEES internals.
-
----
-
-## Future capabilities
-
-As additional capabilities become part of the supported Python SDK, new integration patterns can be documented here.
-
-A capability should not be considered supported until it appears in current official SDK documentation.
+See [Complete Integration Guide](NEES-INTEGRATION-GUIDE.md).

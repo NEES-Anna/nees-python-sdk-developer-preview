@@ -1,96 +1,16 @@
-# Authentication
+# Authentication — Governance Platform V3
 
-The NEES Python SDK uses an API key to authenticate supported remote requests.
+Sign in to https://app.nees.cloud, create or select the authorized organization, project, runtime and environment, then issue a runtime credential through the supported dashboard workflow.
 
-## Recommended configuration
-
-Store the API key in an environment variable.
-
-### Windows PowerShell
-
-```powershell
-$env:NEES_API_KEY="your-api-key"
-```
-
-### Linux / macOS
-
-```bash
-export NEES_API_KEY="your-api-key"
-```
-
-Then initialize the SDK normally:
-
-```python
-from nees import NEESClient
-
-client = NEESClient()
-```
-
----
-
-## Explicit API key
-
-For controlled development environments, an API key can also be supplied when creating the client:
-
-```python
-from nees import NEESClient
-
-client = NEESClient(
-    api_key="your-api-key"
-)
-```
-
-Avoid hard-coding production credentials in application source code.
-
----
-
-## API key safety
-
-Never publish or commit:
+**Keep credentials server-side.** Inject secrets through the deployment's secret manager and select the configuration mechanism required by your pinned connector/SDK version. Example application-side configuration pattern (no real secret values):
 
 ```text
-NEES_API_KEY
+NEES_RUNTIME_URL=https://api.nees.cloud
+NEES_RUNTIME_API_KEY=<your-own-runtime-credential>
 ```
 
-Never include a real key in:
+The variable names above were used by one hosted application adapter; **not every connector automatically reads them**. Confirm the version-specific documented configuration.
 
-- GitHub repositories
-- screenshots
-- issue reports
-- example code
-- frontend JavaScript
-- public logs
-- documentation
+Never publish actual keys, access tokens, credential prefixes coupled with identifying account data, privileged assessment JSON or confidential authorization results. On an authentication failure, validate scope and configuration without logging the secret; rotate or revoke if exposure is suspected.
 
-API keys should be treated as secrets.
-
----
-
-## Server-side use
-
-NEES API credentials should normally remain in trusted backend environments.
-
-Example:
-
-```text
-Browser / User
-      |
-      v
-Your Backend
-      |
-      v
-NEES Python SDK
-      |
-      v
-NEES API
-```
-
-Avoid exposing NEES credentials directly to untrusted clients.
-
----
-
-## Revoked or invalid credentials
-
-Authentication failures should be handled using the SDK's documented error classes.
-
-See [ERROR_HANDLING.md](ERROR_HANDLING.md).
+**Historical only:** `NEES_API_KEY`, `from nees import NEESClient` and the `client.chat` API belonged to the older `nees-core-sdk` chat preview. They are not instructions for V3 Governance Platform authentication.

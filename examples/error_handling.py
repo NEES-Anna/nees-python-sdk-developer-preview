@@ -1,4 +1,4 @@
-"""Basic error handling with the NEES Python SDK."""
+"""LEGACY ONLY: nees-core-sdk 0.1.x chat preview. NOT NEES Governance Platform V3.\n\nDo not use this script as a Core V3 integration or production example.\n"""\n\n"""Basic error handling with the NEES Python SDK."""
 
 from nees import (
     NEESAPIError,
