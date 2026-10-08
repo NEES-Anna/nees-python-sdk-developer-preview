@@ -1,77 +1,13 @@
-# Core Concepts for SDK Users
+# SDK Concepts — Governance Platform V3
 
-This document explains only the concepts required to use the public NEES Python SDK.
+- **Client:** The compatible `nees-sdk` 3.x interface, distinct from legacy `NEESClient.chat`.
+- **Operation:** A requested action associated with a published, registered action reference.
+- **Qualification:** Governance assessment against the required authority/policy/relationship/tool context.
+- **Authorization:** Permission under the applicable validated decision; **not proof** of external execution.
+- **Execution:** Actual application-owned effect, protected by target/context rechecks.
+- **Report:** Truthful record of observed execution outcome.
+- **Evidence / receipt:** Auditable projections for tracing and reconciling activity.
 
-It is not an architecture specification for NEES Core.
+The documented hosted sequence is submit → qualify → start → report → inspect. Refer to your pinned release for exact signatures and argument syntax. Do not import private Core implementation packages.
 
-## Client
-
-`NEESClient` is the primary Python interface exposed by the SDK.
-
-```python
-from nees import NEESClient
-
-client = NEESClient()
-```
-
----
-
-## Request
-
-The current SDK allows a Python application to submit a supported chat request to NEES.
-
-```python
-result = client.chat("Your message")
-```
-
----
-
-## Response
-
-The SDK converts the supported service response into a small public Python model.
-
-The primary application-facing value is:
-
-```python
-result.reply
-```
-
----
-
-## Governance result
-
-A response can contain selected governance information:
-
-```python
-result.governance.decision
-result.governance.status
-result.governance.reason
-```
-
-These are consumer-facing results.
-
-They do not expose the internal governance process that produced them.
-
----
-
-## Request identity
-
-Responses expose public identifiers that applications can use for correlation:
-
-```python
-result.session_id
-result.request_id
-result.trace_id
-```
-
-`trace_id` may be absent and should be treated as optional.
-
----
-
-## Public contract
-
-A useful rule for integrations is:
-
-> Build against what the SDK documents, not against assumptions about the NEES service behind it.
-
-This keeps applications isolated from internal implementation changes.
+See [SDK Usage](../SDK_USAGE.md) and [Integration Guide](NEES-INTEGRATION-GUIDE.md).

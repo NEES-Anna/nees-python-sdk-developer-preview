@@ -1,81 +1,19 @@
-# Error Handling
+# Error Handling — Governance Platform V3
 
-The NEES Python SDK exposes structured exception classes for common API and configuration failures.
+**Never treat an HTTP failure, timeout or missing/ambiguous response as approval to execute an external side effect.** The exact Python exception names and HTTP error body shapes are version-specific: confirm them against the pinned `nees-sdk` release or connector implementation.
 
-## General error handling
+| Condition | Application behavior |
+| --- | --- |
+| Invalid authentication or scope | Fail closed, verify configuration, do not print credentials |
+| Governance rejection | Do not execute; preserve safe reason/operation correlation |
+| Incomplete or stale assessment | Re-qualify with properly published authorized state |
+| Unknown action/endpoint | Confirm action registration and deployed API version |
+| Timeout after submission/start | Reconcile operation status before any retry |
+| Tool target/context mismatch | Stop execution, reobserve and replan |
+| Execution failure after ALLOW | Report the observed failure honestly and retain evidence |
 
-Use `NEESAPIError` when you want to catch API-related failures broadly.
+NainaSOS used a narrowly-scoped transport fallback for one Windows environment. It was **not** a generic SDK recommendation and never converted a governance denial into authorization.
 
-```python
-from nees import NEESClient, NEESAPIError
+For historical `nees-core-sdk` 0.1.x exception examples, inspect the older package's PyPI documentation; they are not a verified Core V3 exception API.
 
-client = NEESClient()
-
-try:
-    result = client.chat("Hello")
-    print(result.reply)
-
-except NEESAPIError as exc:
-    print("NEES API error:", exc)
-```
-
----
-
-## Available public exceptions
-
-The SDK currently exports:
-
-```python
-NEESAPIError
-NEESAuthenticationError
-NEESAuthorizationError
-NEESBadRequestError
-NEESConfigurationError
-NEESConflictError
-NEESConnectionError
-NEESNotFoundError
-NEESRateLimitError
-NEESServerError
-NEESTimeoutError
-NEESValidationError
-```
-
----
-
-## Example
-
-```python
-from nees import (
-    NEESClient,
-    NEESAuthenticationError,
-    NEESRateLimitError,
-    NEESTimeoutError,
-    NEESAPIError,
-)
-
-client = NEESClient()
-
-try:
-    result = client.chat("Hello from my application")
-    print(result.reply)
-
-except NEESAuthenticationError:
-    print("Check the configured NEES API key.")
-
-except NEESRateLimitError:
-    print("The current request limit has been reached.")
-
-except NEESTimeoutError:
-    print("The NEES request timed out.")
-
-except NEESAPIError as exc:
-    print("NEES request failed:", exc)
-```
-
----
-
-## Do not expose sensitive error context
-
-Production applications should avoid returning raw backend exceptions, credentials, headers, or internal configuration information directly to end users.
-
-Log only the information your operational environment requires.
+See [Troubleshooting](docs/TROUBLESHOOTING.md).

@@ -1,87 +1,18 @@
-# Installation
+# Installation — NEES Governance Platform V3
 
-## Requirements
+The recommended Governance Platform Python package is `nees-sdk` (3.x release-candidate series), **not** the historical `nees-core-sdk` chat client.
 
-The NEES Python SDK requires:
-
-- Python 3.9 or newer
-- internet access to the configured NEES API endpoint
-- a valid NEES API key
-
----
-
-## Install from PyPI
+Use a virtual environment and verify your chosen published version supports your Python interpreter:
 
 ```bash
-pip install nees-core-sdk
+python -m pip install "nees-sdk==3.0.0rc2"
+nees --help
 ```
 
-Upgrade an existing installation:
+The pin above is a previously tested candidate, **not a claim that it is the newest release**. Check https://pypi.org/project/nees-sdk/ and your hosted API compatibility before deployment. Do not install both NEES distributions into the same interpreter without verifying import ownership and compatibility.
 
-```bash
-pip install --upgrade nees-core-sdk
-```
+Continue with [Quickstart](QUICKSTART.md) and [SDK Usage](SDK_USAGE.md).
 
----
+## Legacy v0.1 chat interface
 
-## Verify installation
-
-```bash
-python -c "from nees import NEESClient; print('NEES SDK installed')"
-```
-
-Expected output:
-
-```text
-NEES SDK installed
-```
-
----
-
-## Package name vs import name
-
-The PyPI distribution name is:
-
-```text
-nees-core-sdk
-```
-
-The Python package is imported as:
-
-```python
-import nees
-```
-
-or:
-
-```python
-from nees import NEESClient
-```
-
----
-
-## Virtual environment
-
-Using a virtual environment is recommended.
-
-Windows:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install nees-core-sdk
-```
-
-Linux/macOS:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install nees-core-sdk
-```
-
----
-
-## Next
-
-Continue with [QUICKSTART.md](QUICKSTART.md).
+The `nees-core-sdk` package and its `NEESClient.chat` examples in `examples/` are archived compatibility references, not V3 integration instructions. The historical public PyPI release used Python 3.9+; do not infer V3's Python requirements from that older package.
