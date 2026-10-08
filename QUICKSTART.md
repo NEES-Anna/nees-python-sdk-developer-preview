@@ -45,13 +45,40 @@ NEES_RUNTIME_API_KEY=<obtain-from-your-own-runtime>
 
 Set the API key in your trusted backend runtime or a secret manager. Never commit literal key values, use a browser bundle, or paste them into support tickets.
 
-## 5. Govern and verify
+## 5. Construct a V3 client and request (no network call)
+
+The following constructor signatures were inspected directly from the published `nees-sdk==3.0.0rc2` package. It is a **setup example**, not a valid end-to-end operation: the action identifier is illustrative and assessment bindings must come from your own authorized runtime.
+
+```python
+import os
+from nees import NEESHTTPClient, NEESHTTPConfig, ActionRequest
+
+api_key = os.environ["NEES_RUNTIME_API_KEY"]
+
+client = NEESHTTPClient(
+    NEESHTTPConfig(
+        base_url="https://api.nees.cloud",
+        api_key=api_key,
+        timeout_seconds=20.0,
+    )
+)
+request = ActionRequest(
+    action_ref="example.action.v1",
+    operation_key="example-request-001",
+    input={"message": "Hello"},
+)
+# No operation is sent here.
+```
+
+`NEESHTTPClient` rejects an empty API key during initialization, even before calling its `health()` method. Set the environment variable privately; never paste its value into a public issue or CLI arguments.
+
+## 6. Govern and verify
 
 Use the supported submit → qualify → start → report workflow. Inspect the operation, evidence, and receipt using your version's documented commands/routes.
 
 **Do not execute a side effect unless the governing result and the local target/context checks allow it.** Treat reject, missing authority, ambiguous response and unavailable service as fail-closed. Record the *actual* result, not merely a planned or authorized result.
 
-## 6. Acceptance tests
+## 7. Acceptance tests
 
 Verify one allowed operation, one blocked operation, one stale/invalid configuration, one transport failure, and one external execution failure. Check that evidence/receipt and reported execution state agree.
 

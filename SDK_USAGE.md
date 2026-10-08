@@ -21,7 +21,7 @@ nees evidence
 nees receipt
 ```
 
-Run `nees <command> --help` to inspect the installed version's argument syntax. This repository intentionally does not invent argument flags, request bodies or `NEESHTTPClient` constructor signatures that have not been verified against the published release.
+Run `nees <command> --help` to inspect the installed version's argument syntax. The verified client constructors and CLI flags are recorded below. Complete HTTP request/response bodies and runtime behavior still require version-matched validation.
 
 The hosted operation lifecycle is **submit → qualify → start → report**; operation/evidence/receipt retrieval supports inspection of resulting records. Consult [Integration Guide](docs/NEES-INTEGRATION-GUIDE.md).
 
@@ -39,11 +39,12 @@ The caller retains responsibility for actual external execution, verification an
 The following signatures were observed using Python `inspect.signature` on a clean installation of the published wheel on 2026-10-08. **This is interface inspection, not a live authenticated API test.**
 
 ```python
+import os
 from nees import NEESHTTPClient, NEESHTTPConfig, ActionRequest
 
 config = NEESHTTPConfig(
     base_url="https://api.nees.cloud",
-    api_key="<YOUR_OWN_RUNTIME_KEY>",
+    api_key=os.environ["NEES_RUNTIME_API_KEY"],
     timeout_seconds=10.0,
 )
 client = NEESHTTPClient(config)
