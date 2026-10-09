@@ -25,7 +25,7 @@ Trusted application / agent
 4. Issue least-privilege credentials for that runtime; never expose keys to a browser.
 5. Register the **actual** governed action reference and its resource, operation, capability and side-effect metadata.
 6. Publish the required authority, policy and relationship/tool governance state using supported Control Plane workflows.
-7. Supply any required assessment bindings using **authorized values from your own deployment**, not documentation examples.
+7. Use **Infrastructure → Assessment configuration manager** to select registered action and published scope, then export current assessment bindings for your method. Never guess refs, versions or digests. [Dashboard workflow](DASHBOARD-ASSESSMENT-CONFIGURATION.md).
 8. Check Runtime health/readiness and credential access.
 9. Complete allow, deny and failure-path tests before enabling consequential production effects.
 

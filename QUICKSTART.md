@@ -26,6 +26,10 @@ side_effect: true
 
 The action must actually exist in your own runtime; copying these strings does **not** register it.
 
+## Dashboard assessment configuration
+
+In **Dashboard → Infrastructure → Assessment configuration manager**, select project, runtime, environment, **Registered action**, **Published scope** and integration method. Click **Resolve existing assessment** for current version-bound governance commitments, then copy the export. This read is non-mutating. **Publish baseline & resolve** is a separate state-changing operation and may overwrite customized governance. See [Dashboard workflow](docs/DASHBOARD-ASSESSMENT-CONFIGURATION.md).
+
 ## 3. Choose a connector
 
 - **Python:** `python -m pip install "nees-sdk==3.0.0rc2"` (known historical release candidate; confirm currently published compatible version and Python requirements before use).
