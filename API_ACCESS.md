@@ -2,6 +2,8 @@
 
 Open https://app.nees.cloud to sign in and use the available organization, project, runtime and environment onboarding screens. Provision a runtime key only for resources your account is authorized to manage.
 
+Dashboard Infrastructure includes action and published-scope dropdowns and version-bound configuration exports for SDK, REST, MCP adapter and application environments. [Details](docs/DASHBOARD-ASSESSMENT-CONFIGURATION.md).
+
 Hosted Runtime: https://api.nees.cloud
 
 Hosted Control Plane: https://control-api.nees.cloud

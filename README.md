@@ -10,6 +10,7 @@ NEES provides an independent governance boundary for supported AI agents, automa
 
 1. [Access and onboarding](API_ACCESS.md)
 2. [Governance Platform quickstart](QUICKSTART.md)
+3. [Dashboard assessment workflow](docs/DASHBOARD-ASSESSMENT-CONFIGURATION.md)
 3. [Complete integration guide](docs/NEES-INTEGRATION-GUIDE.md)
 4. [Integration patterns](docs/integration-patterns.md)
 5. [Python SDK usage and migration](SDK_USAGE.md)
