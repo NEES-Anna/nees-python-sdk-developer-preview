@@ -2,9 +2,15 @@
 
 This replaces the **recommended** v0.1 chat-only walkthrough. Old chat examples remain under `examples/` as historical material.
 
+**New developers:** Read the [hosted guide](https://app.nees.cloud/developer-preview) and [Free Plan limits](docs/FREE-DEVELOPER-PREVIEW.md) first.
+
 ## 1. Onboard
 
-Visit https://app.nees.cloud and authenticate. In the dashboard, create/select your **organization**, **project**, **runtime**, and **environment**. Issue a runtime credential using the authorized dashboard workflow. Store it in your secret manager; it may not be displayed again.
+Visit https://app.nees.cloud/login, register, confirm email and sign in. Create your Free organization. Under **Developer Onboarding**, provision one project, one runtime, one **development** environment, identity binding and one-time runtime credential. Keep the credential in your backend secret manager; it may not be shown again.
+
+**Free limits:** 1,000 new governance submissions per UTC month, two active runtime credentials, 30 authenticated runtime requests/minute per organization. Staging/production environments and self-service paid upgrades are not available.
+
+Before connecting an app, use **Run informational proof** or **Run governed execution proof** in the Dashboard. These are bounded demonstrations; an ALLOW does not prove an external provider executed anything. If provisioning fails partway through, inspect existing Infrastructure resources before retrying.
 
 ## 2. Register and govern an action
 
